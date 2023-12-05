@@ -65,10 +65,10 @@
 		67F13E802B1F2BC300525CA6 /* Have */ = {
 			isa = PBXGroup;
 			children = (
-				67F13E9A2B1F2FA700525CA6 /* Model */,
+				67F13EB72B1F504600525CA6 /* Data */,
+				67F13EB82B1F50B200525CA6 /* Presentation */,
 				67F13E812B1F2BC300525CA6 /* AppDelegate.swift */,
 				67F13E832B1F2BC300525CA6 /* SceneDelegate.swift */,
-				67F13E852B1F2BC300525CA6 /* RemindersViewController.swift */,
 				67F13E872B1F2BC300525CA6 /* Main.storyboard */,
 				67F13E8D2B1F2BC500525CA6 /* Assets.xcassets */,
 				67F13E8F2B1F2BC500525CA6 /* LaunchScreen.storyboard */,
@@ -85,6 +85,38 @@
 				67F13E9D2B1F381100525CA6 /* Reminder+DateTime.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		67F13EB52B1F501300525CA6 /* Reminders View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				67F13E852B1F2BC300525CA6 /* RemindersViewController.swift */,
+			);
+			path = "Reminders View Controller";
+			sourceTree = "<group>";
+		};
+		67F13EB62B1F501C00525CA6 /* Reminder View Controller */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Reminder View Controller";
+			sourceTree = "<group>";
+		};
+		67F13EB72B1F504600525CA6 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				67F13E9A2B1F2FA700525CA6 /* Model */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		67F13EB82B1F50B200525CA6 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				67F13EB62B1F501C00525CA6 /* Reminder View Controller */,
+				67F13EB52B1F501300525CA6 /* Reminders View Controller */,
+			);
+			path = Presentation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
