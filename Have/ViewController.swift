@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  Have
-//
-//  Created by minseong.kim on 2023/12/05.
-//
-
 import UIKit
 
 class ViewController: UIViewController {
@@ -13,7 +6,4 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-
-
 }
-
