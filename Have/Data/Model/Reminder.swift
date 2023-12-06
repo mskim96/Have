@@ -10,7 +10,7 @@ import Foundation
 ///     - dueTime: due time of the reminder
 ///     - isCompleted: whether or not the reminder is completed
 ///
-struct Reminder {
+struct Reminder: Identifiable {
     var id: String = UUID().uuidString
     var title: String
     var memo: String?
@@ -65,9 +65,21 @@ extension Reminder {
         Reminder(
             title: "Stargazing Night",
             memo: "Head to a dark spot away from city lights and enjoy a night of stargazing.",
-            dueDate: Date().addingTimeInterval(92500.0),
+            dueDate: Date().addingTimeInterval(492500.0),
             dueTime: Date().addingTimeInterval(4 * 60 * 60)
         )
     ]
+}
+
+extension [Reminder] {
+    func getReminder(withId id: Reminder.ID) -> Reminder {
+        guard let index = firstIndex(where: { $0.id == id }) else { fatalError() }
+        return self[index]
+    }
+    
+    func getIndex(withId id: Reminder.ID) -> Int {
+        guard let index = firstIndex(where: { $0.id == id }) else { fatalError() }
+        return index
+    }
 }
 #endif
