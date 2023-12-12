@@ -41,7 +41,7 @@ extension RemindersViewController {
         
         let doneButtonConfiguration = completeButtonConfiguration(for: reminder)
         cell.accessories = [
-            .customView(configuration: doneButtonConfiguration)
+            .customView(configuration: doneButtonConfiguration),
         ]
         
         cell.contentConfiguration = contentConfiguration

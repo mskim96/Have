@@ -1,3 +1,7 @@
+/**
+ * Abstract - Date extenstion for Reminder.
+ */
+
 import Foundation
 import UIKit
 
@@ -8,6 +12,15 @@ extension Date {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = .current
         dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .none
+        return dateFormatter
+    }
+    
+    /// Detail date formatter.
+    private func detailDateFormatter() -> DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = .current
+        dateFormatter.dateStyle = .full
         dateFormatter.timeStyle = .none
         return dateFormatter
     }
@@ -25,15 +38,30 @@ extension Date {
         return time != nil ? dayAndTimeText(with: time!) : onlyDayText()
     }
     
+    /// The date text for the reminder detail.
+    func detailDayText() -> String {
+        return onlyDayText(detail: true)
+    }
+    
+    // The time text for the reminder detail.
+    func timeText() -> String {
+        return self.formatted(date: .omitted, time: .shortened)
+    }
+    
     ///
     /// The day text for the reminder only includes the date.
     ///
     /// if the date falls within the range of (yesterday, today, tomorrow), it returns the
     /// corresponding string. otherwise, it returns value in the format.
     ///
-    /// e.g.`Today` or `2023/12/30`
+    /// - Parameters:
+    ///     - detail: flag to receive a string in a detailed format.
     ///
-    private func onlyDayText() -> String {
+    ///  - Returns:
+    ///     - default: e.g.`Today` or `2023/12/30`
+    ///     - detail: e.g. `Today` or `Saturday, December 13, 2023`
+    ///
+    private func onlyDayText(detail: Bool = false) -> String {
         switch self {
         case _ where Locale.current.calendar.isDateInToday(self):
             return NSLocalizedString("Today", comment: "Today date description")
@@ -42,7 +70,7 @@ extension Date {
         case _ where Locale.current.calendar.isDateInYesterday(self):
             return NSLocalizedString("Yesterday", comment: "Yesterday date description")
         default:
-            return defaultDateFormatter().string(from: self)
+            return detail ? detailDateFormatter().string(from: self) : defaultDateFormatter().string(from: self)
         }
     }
     

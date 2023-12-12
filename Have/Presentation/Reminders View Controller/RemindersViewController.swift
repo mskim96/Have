@@ -10,6 +10,7 @@ class RemindersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupNavigationBar()
         configureHierarchy()
         configureDataSource()
     }
@@ -23,6 +24,7 @@ extension RemindersViewController {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
+        collectionView.delegate = self
         
         NSLayoutConstraint.activate(
             [
@@ -36,8 +38,25 @@ extension RemindersViewController {
     
     private func createLayout() -> UICollectionViewLayout {
         var listConfiguration = UICollectionLayoutListConfiguration(appearance: .plain)
+        var seperatorConfiguration = UIListSeparatorConfiguration(listAppearance: .plain)
+        seperatorConfiguration.topSeparatorVisibility = .hidden
+        listConfiguration.separatorConfiguration = seperatorConfiguration
         listConfiguration.backgroundColor = .clear
-        listConfiguration.showsSeparators = false
         return UICollectionViewCompositionalLayout.list(using: listConfiguration)
+    }
+    
+    private func setupNavigationBar() {
+        // TODO: Category 기능 생기면, Category title 로 교체.
+        navigationItem.title = NSLocalizedString("All", comment: "Reminders view controller title")
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
+}
+
+extension RemindersViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        let id = reminders[indexPath.item].id
+        navigateToReminderViewController(withId: id)
+        return false
     }
 }
