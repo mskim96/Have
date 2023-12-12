@@ -16,6 +16,7 @@
 		6754A2252B21A2E50050AC41 /* ReminderViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6754A2242B21A2E50050AC41 /* ReminderViewController+DataSource.swift */; };
 		675512712B270D15005589CB /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675512702B270D15005589CB /* PlaceholderTextView.swift */; };
 		6769F5442B1F6ED40074B2A1 /* RemindersViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6769F5432B1F6ED40074B2A1 /* RemindersViewController+DataSource.swift */; };
+		67AA78712B28449F007AE7BE /* AddReminderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67AA78702B28449F007AE7BE /* AddReminderButton.swift */; };
 		67D6F9E52B20680D0095AA11 /* ReminderCompleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D6F9E42B20680D0095AA11 /* ReminderCompleteButton.swift */; };
 		67D6F9E72B206A1A0095AA11 /* RemindersViewController+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D6F9E62B206A1A0095AA11 /* RemindersViewController+Action.swift */; };
 		67E1050D2B22D40100151738 /* ReminderViewController+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E1050C2B22D40100151738 /* ReminderViewController+Action.swift */; };
@@ -42,6 +43,7 @@
 		6754A2242B21A2E50050AC41 /* ReminderViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReminderViewController+DataSource.swift"; sourceTree = "<group>"; };
 		675512702B270D15005589CB /* PlaceholderTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
 		6769F5432B1F6ED40074B2A1 /* RemindersViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemindersViewController+DataSource.swift"; sourceTree = "<group>"; };
+		67AA78702B28449F007AE7BE /* AddReminderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddReminderButton.swift; sourceTree = "<group>"; };
 		67D6F9E42B20680D0095AA11 /* ReminderCompleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderCompleteButton.swift; sourceTree = "<group>"; };
 		67D6F9E62B206A1A0095AA11 /* RemindersViewController+Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RemindersViewController+Action.swift"; sourceTree = "<group>"; };
 		67E1050C2B22D40100151738 /* ReminderViewController+Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReminderViewController+Action.swift"; sourceTree = "<group>"; };
@@ -74,13 +76,22 @@
 		6769F5472B1F733D0074B2A1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				675512702B270D15005589CB /* PlaceholderTextView.swift */,
+				67AA78702B28449F007AE7BE /* AddReminderButton.swift */,
 				67D6F9E42B20680D0095AA11 /* ReminderCompleteButton.swift */,
+				675512702B270D15005589CB /* PlaceholderTextView.swift */,
+				67AA78722B2844AE007AE7BE /* ContentView */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		67AA78722B2844AE007AE7BE /* ContentView */ = {
+			isa = PBXGroup;
+			children = (
 				673965C32B20805A009220AD /* TextViewContentView.swift */,
 				673965C52B20ADBE009220AD /* DatePickerContentView.swift */,
 				67E1050E2B22D50700151738 /* TimePickerContentView.swift */,
 			);
-			path = Components;
+			path = ContentView;
 			sourceTree = "<group>";
 		};
 		67F13E752B1F2BC300525CA6 = {
@@ -247,6 +258,7 @@
 				6769F5442B1F6ED40074B2A1 /* RemindersViewController+DataSource.swift in Sources */,
 				67F13E822B1F2BC300525CA6 /* AppDelegate.swift in Sources */,
 				67F13E842B1F2BC300525CA6 /* SceneDelegate.swift in Sources */,
+				67AA78712B28449F007AE7BE /* AddReminderButton.swift in Sources */,
 				673965C22B208018009220AD /* ReminderViewController+CellConfiguration.swift in Sources */,
 				673965C42B20805A009220AD /* TextViewContentView.swift in Sources */,
 				673965C62B20ADBE009220AD /* DatePickerContentView.swift in Sources */,
@@ -408,6 +420,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2R4QS48Y83;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Have/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -435,6 +448,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2R4QS48Y83;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Have/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

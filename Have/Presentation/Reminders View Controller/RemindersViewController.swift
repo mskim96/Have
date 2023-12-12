@@ -11,6 +11,7 @@ class RemindersViewController: UIViewController {
         super.viewDidLoad()
         
         setupNavigationBar()
+        setupToolBar()
         configureHierarchy()
         configureDataSource()
     }
@@ -40,6 +41,7 @@ extension RemindersViewController {
         var listConfiguration = UICollectionLayoutListConfiguration(appearance: .plain)
         var seperatorConfiguration = UIListSeparatorConfiguration(listAppearance: .plain)
         seperatorConfiguration.topSeparatorVisibility = .hidden
+        listConfiguration.trailingSwipeActionsConfigurationProvider = configureSwipeAction
         listConfiguration.separatorConfiguration = seperatorConfiguration
         listConfiguration.backgroundColor = .clear
         return UICollectionViewCompositionalLayout.list(using: listConfiguration)
@@ -49,6 +51,34 @@ extension RemindersViewController {
         // TODO: Category 기능 생기면, Category title 로 교체.
         navigationItem.title = NSLocalizedString("All", comment: "Reminders view controller title")
         navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    private func setupToolBar() {
+        let button = AddReminderButton()
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        button.addTarget(self, action: #selector(didPressAddReminderButton(_:)), for: .touchUpInside)
+        
+        let addButton = UIBarButtonItem(customView: button)
+        
+        self.toolbarItems = [addButton, flexibleSpace]
+        self.navigationController?.isToolbarHidden = false
+        self.navigationController?.toolbar.tintColor = .systemBlue
+        self.navigationController?.toolbar.barTintColor = .clear
+    }
+    
+    /// Configure reminder swipe actions.
+    private func configureSwipeAction(for indexPath: IndexPath?) -> UISwipeActionsConfiguration? {
+        guard let indexPath, let id = dataSource.itemIdentifier(for: indexPath) else { return nil }
+        let configuration = UISwipeActionsConfiguration(
+            actions: [
+                configureDeleteAction(withId: id),
+                configureFlagAction(withId: id),
+                configurDetailAction(withId: id)
+            ]
+        )
+        // Set to disabled full swipe action.
+        configuration.performsFirstActionWithFullSwipe = false
+        return configuration
     }
 }
 

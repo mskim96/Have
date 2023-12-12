@@ -6,6 +6,9 @@ import UIKit
 
 class ReminderViewController: UIViewController {
     
+    // Indicates whether it's a new reminder or an edited reminder.
+    var isAddingNewReminder = false
+
     /// Reminder selected from the list of reminders.
     var reminder: Reminder {
         didSet {
@@ -67,17 +70,22 @@ extension ReminderViewController {
     }
     
     private func createLayout() -> UICollectionViewLayout {
-        var listConfiguration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        let listConfiguration = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
         return UICollectionViewCompositionalLayout.list(using: listConfiguration)
     }
     
     private func configureNavigationBar() {
+        // Related Appereance.
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()
         navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
         
-        navigationItem.title = NSLocalizedString("Detail", comment: "Reminder view controller title")
+        let editReminderTitle = NSLocalizedString("Detail", comment: "Reminder view controller title")
+        let addNewReminderTitle = NSLocalizedString("Add Reminder", comment: "Add Reminder view controller title")
         
+        // title and button items.
+        navigationItem.title = isAddingNewReminder ? addNewReminderTitle : editReminderTitle
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .cancel,
             target: self,
@@ -89,6 +97,9 @@ extension ReminderViewController {
             target: self,
             action: #selector(didPressSaveButton(_:))
         )
+        
+        // Set the initial enabled state of the save button.
+        navigationItem.rightBarButtonItem?.isEnabled = !workingReminder.title.isEmpty
     }
 }
 

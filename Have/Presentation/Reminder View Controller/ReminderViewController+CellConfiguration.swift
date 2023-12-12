@@ -14,6 +14,7 @@ extension ReminderViewController {
         contentConfiguration.placeholder = NSLocalizedString("Title", comment: "Reminder title placeholder")
         contentConfiguration.onChange = { [weak self] title in
             self?.workingReminder.title = title
+            self?.updateSaveButtonItemEnabledState()
         }
         return contentConfiguration
     }
@@ -131,5 +132,14 @@ extension ReminderViewController {
         var contentConfiguration = cell.contentConfiguration as? UIListContentConfiguration
         contentConfiguration?.secondaryText = secondaryText(self.workingReminder)
         cell.contentConfiguration = contentConfiguration
+    }
+    
+    /// Update save button enabled state.
+    ///
+    /// Enabled the save button if the working reminder's title exists.
+    /// otherwise, set it to disabled.
+    ///
+    func updateSaveButtonItemEnabledState() {
+        navigationItem.rightBarButtonItem?.isEnabled = workingReminder.title.isEmpty
     }
 }

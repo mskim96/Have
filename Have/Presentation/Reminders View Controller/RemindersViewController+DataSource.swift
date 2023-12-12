@@ -33,6 +33,7 @@ extension RemindersViewController {
         if reminder.isCompleted {
             contentConfiguration.textProperties.color = .secondaryLabel
         }
+        
         if let date = reminder.dueDate {
             contentConfiguration.secondaryText = date.dateText(with: reminder.dueTime)
             contentConfiguration.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption2)
@@ -59,6 +60,24 @@ extension RemindersViewController {
         reminder.isCompleted.toggle()
         updateReminder(reminder)
         updateSnapshot(reloading: [id])
+    }
+    
+    // TODO: Core Data 구현 완료 시 update 필요
+    func flagReminder(withId id: Reminder.ID) {
+        var reminder = reminders.getReminder(withId: id)
+        reminder.isFlagged.toggle()
+        updateReminder(reminder)
+    }
+
+    // TODO: Core Data 구현 완료 시 update 필요
+    func addReminder(_ reminder: Reminder) {
+        reminders.append(reminder)
+    }
+    
+    // TODO: Core Data 구현 완료 시 update 필요
+    func deleteReminder(withId id: Reminder.ID) {
+        let index = reminders.getIndex(withId: id)
+        reminders.remove(at: index)
     }
     
     /// Complete button configuration.
