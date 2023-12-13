@@ -140,6 +140,6 @@ extension ReminderViewController {
     /// otherwise, set it to disabled.
     ///
     func updateSaveButtonItemEnabledState() {
-        navigationItem.rightBarButtonItem?.isEnabled = workingReminder.title.isEmpty
+        navigationItem.rightBarButtonItem?.isEnabled = !workingReminder.title.isEmpty
     }
 }

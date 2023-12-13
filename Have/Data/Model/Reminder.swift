@@ -9,6 +9,7 @@ import Foundation
 ///     - dueDate: due date of the reminder
 ///     - dueTime: due time of the reminder
 ///     - isCompleted: whether or not the reminder is completed
+///     - isFlagged: whether or not the reminder is flagged.
 ///
 struct Reminder: Equatable, Identifiable {
     var id: String = UUID().uuidString

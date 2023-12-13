@@ -1,3 +1,7 @@
+/**
+ * Abstract - Reminders view controller.
+ */
+
 import UIKit
 
 class RemindersViewController: UIViewController {
@@ -11,7 +15,7 @@ class RemindersViewController: UIViewController {
         super.viewDidLoad()
         
         setupNavigationBar()
-        setupToolBar()
+        setupToolbar()
         configureHierarchy()
         configureDataSource()
     }
@@ -53,7 +57,12 @@ extension RemindersViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
-    private func setupToolBar() {
+    private func setupToolbar() {
+        // Scroll edge appearance of toolbar.
+        let scrollEdgeToolbarAppearance = UIToolbarAppearance()
+        scrollEdgeToolbarAppearance.configureWithOpaqueBackground()
+        scrollEdgeToolbarAppearance.shadowColor = nil
+
         let button = AddReminderButton()
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         button.addTarget(self, action: #selector(didPressAddReminderButton(_:)), for: .touchUpInside)
@@ -62,8 +71,7 @@ extension RemindersViewController {
         
         self.toolbarItems = [addButton, flexibleSpace]
         self.navigationController?.isToolbarHidden = false
-        self.navigationController?.toolbar.tintColor = .systemBlue
-        self.navigationController?.toolbar.barTintColor = .clear
+        self.navigationController?.toolbar.scrollEdgeAppearance = scrollEdgeToolbarAppearance
     }
     
     /// Configure reminder swipe actions.
