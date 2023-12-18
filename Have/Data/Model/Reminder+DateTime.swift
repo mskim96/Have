@@ -1,5 +1,6 @@
 /**
- * Abstract - Date extenstion for Reminder.
+ * Abstract:
+ * Date extenstion for Reminder.
  */
 
 import Foundation

@@ -1,12 +1,23 @@
 /**
- * Abstract - Reminders view controller.
+ * Abstract:
+ * Reminders view controller.
  */
 
 import UIKit
 
 class RemindersViewController: UIViewController {
-    // TODO: Core Data 구현 완료 시 update 필요
-    var reminders: [Reminder] = Reminder.sampleData
+    
+    let reminderListRepository = ReminderListMockRepository.mock
+    let reminderRepository: ReminderRepository = ReminderMockRepository.mock
+    
+    /// Current reminder list from ReminderListsViewController.
+    var reminderList: ReminderList
+    /// The Reminders filtered by the current reminder list.
+    var filteredReminders: [Reminder] {
+        return reminderRepository.getReminders().filter {
+            reminderList.type.shouldInclude(reminder: $0, reminderList: reminderList )
+        }
+    }
     
     var collectionView: UICollectionView! = nil
     var dataSource: UICollectionViewDiffableDataSource<Int, Reminder.ID>! = nil
@@ -19,6 +30,15 @@ class RemindersViewController: UIViewController {
         configureHierarchy()
         configureDataSource()
     }
+    
+    init(reminderList: ReminderList) {
+        self.reminderList = reminderList
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 // MARK: - Configure view hierarchy and layout.
@@ -26,19 +46,10 @@ class RemindersViewController: UIViewController {
 extension RemindersViewController {
     
     func configureHierarchy() {
+        view.backgroundColor = .systemBackground
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(collectionView)
         collectionView.delegate = self
-        
-        NSLayoutConstraint.activate(
-            [
-                collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-                collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            ]
-        )
+        view.addFullScreenSubview(collectionView)
     }
     
     private func createLayout() -> UICollectionViewLayout {
@@ -52,25 +63,37 @@ extension RemindersViewController {
     }
     
     private func setupNavigationBar() {
-        // TODO: Category 기능 생기면, Category title 로 교체.
-        navigationItem.title = NSLocalizedString("All", comment: "Reminders view controller title")
+        let appearance = UINavigationBarAppearance()
+        appearance.largeTitleTextAttributes = [.foregroundColor: reminderList.color]
+        navigationItem.title = reminderList.name
+        navigationItem.standardAppearance = appearance
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     private func setupToolbar() {
+        // Standard edge appearance of toolbar
+        let standardToobarAppearance = UIToolbarAppearance()
+        standardToobarAppearance.configureWithTransparentBackground()
+        standardToobarAppearance.shadowColor = nil
+        
         // Scroll edge appearance of toolbar.
         let scrollEdgeToolbarAppearance = UIToolbarAppearance()
         scrollEdgeToolbarAppearance.configureWithOpaqueBackground()
         scrollEdgeToolbarAppearance.shadowColor = nil
-
-        let button = AddReminderButton()
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        button.addTarget(self, action: #selector(didPressAddReminderButton(_:)), for: .touchUpInside)
+        scrollEdgeToolbarAppearance.backgroundColor = .clear
         
-        let addButton = UIBarButtonItem(customView: button)
+        /// The Add reminder button appears when the currentReminderList is not `builtInCompleted`.
+        let builtInCompletedType = reminderList.type == .builtInCompleted
+        if !builtInCompletedType {
+            let button = AddReminderButton()
+            let addButton = UIBarButtonItem(customView: button)
+            let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+            button.addTarget(self, action: #selector(didPressAddReminderButton(_:)), for: .touchUpInside)
+            self.toolbarItems = [addButton, flexibleSpace]
+        }
         
-        self.toolbarItems = [addButton, flexibleSpace]
         self.navigationController?.isToolbarHidden = false
+        self.navigationController?.toolbar.standardAppearance = standardToobarAppearance
         self.navigationController?.toolbar.scrollEdgeAppearance = scrollEdgeToolbarAppearance
     }
     
@@ -90,10 +113,13 @@ extension RemindersViewController {
     }
 }
 
+// MARK: - UICollectionViewDelegate
+
 extension RemindersViewController: UICollectionViewDelegate {
     
+    /// Navigate to ReminderViewController with the reminder when the user clicked the cell.
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        let id = reminders[indexPath.item].id
+        let id = filteredReminders[indexPath.item].id
         navigateToReminderViewController(withId: id)
         return false
     }

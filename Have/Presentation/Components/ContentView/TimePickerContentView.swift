@@ -1,5 +1,6 @@
 /**
- * Abstract - Time Picker content view.
+ * Abstract:
+ * Time Picker content view.
  */
 
 import UIKit
@@ -19,7 +20,7 @@ class TimePickerContentView: UIView, UIContentView {
         }
     }
     
-    let datePicker = UIDatePicker()
+    let timePicker = UIDatePicker()
     
     var configuration: UIContentConfiguration {
         didSet {
@@ -30,21 +31,21 @@ class TimePickerContentView: UIView, UIContentView {
     init(_ configuration: UIContentConfiguration) {
         self.configuration = configuration
         super.init(frame: .zero)
-        addSubview(datePicker)
-        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(timePicker)
+        timePicker.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate(
             [
-                datePicker.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-                datePicker.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-                datePicker.topAnchor.constraint(equalTo: self.topAnchor),
-                datePicker.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+                timePicker.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+                timePicker.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+                timePicker.topAnchor.constraint(equalTo: self.topAnchor),
+                timePicker.bottomAnchor.constraint(equalTo: self.bottomAnchor)
             ]
         )
         
-        datePicker.addTarget(self, action: #selector(didPick(_:)), for: .valueChanged)
-        datePicker.preferredDatePickerStyle = .wheels
-        datePicker.datePickerMode = .time
+        timePicker.addTarget(self, action: #selector(didPick(_:)), for: .valueChanged)
+        timePicker.preferredDatePickerStyle = .wheels
+        timePicker.datePickerMode = .time
     }
     
     required init?(coder: NSCoder) {
@@ -53,7 +54,7 @@ class TimePickerContentView: UIView, UIContentView {
     
     func configure(configuration: UIContentConfiguration) {
         guard let configuration = configuration as? Configuration else { return }
-        datePicker.date = configuration.time
+        timePicker.date = configuration.time
     }
     
     @objc private func didPick(_ sender: UIDatePicker) {

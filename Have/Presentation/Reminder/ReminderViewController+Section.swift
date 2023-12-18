@@ -1,5 +1,6 @@
 /**
- * Abstract - Section for DiffableDataSource in Reminder view controller.
+ * Abstract:
+ * Section for DiffableDataSource in Reminder view controller.
  */
 
 import UIKit
@@ -10,5 +11,6 @@ extension ReminderViewController {
         case titleAndNotes
         case dateAndTime
         case flag
+        case reminderList
     }
 }

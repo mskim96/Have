@@ -1,5 +1,6 @@
 /**
- * Abstract - Reminder complete button.
+ * Abstract:
+ * Reminder complete button.
  */
 
 import UIKit

@@ -1,5 +1,6 @@
 /**
- * Abstract - Actions related to Reminders.
+ * Abstract:
+ * Actions related to Reminders.
  */
 
 import UIKit
@@ -12,14 +13,17 @@ extension RemindersViewController {
         completedReminder(withId: id)
     }
     
-    /// called when the user clicks the complete button.
+    /// Called when the user clicks the complete button.
     @objc func didPressAddReminderButton(_ sender: AddReminderButton) {
-        let reminder = Reminder(title: "")
+        let setReminderList = reminderListRepository.getUserCreatedReminderList()
+        let reminder = Reminder(title: "", reminderList: setReminderList)
         let viewController = ReminderViewController(reminder: reminder) { [weak self] reminder in
             self?.addReminder(reminder)
             self?.updateSnapshot()
         }
         viewController.isAddingNewReminder = true
+        viewController.fromReminderListType = reminderList.type
+        
         let navigationController = UINavigationController(rootViewController: viewController)
         present(navigationController, animated: true)
     }
@@ -30,10 +34,19 @@ extension RemindersViewController {
     ///     - id: Reminder id for navigate reminder detail view controller.
     ///
     func navigateToReminderViewController(withId id: Reminder.ID) {
-        let reminder = reminders.getReminder(withId: id)
-        let viewController = ReminderViewController(reminder: reminder) { [weak self] reminder in
-            self?.updateReminder(reminder)
-            self?.updateSnapshot(reloading: [reminder.id])
+        let currentReminder = reminderRepository.getReminder(withId: id)
+        let viewController = ReminderViewController(reminder: currentReminder) { [weak self] reminder in
+            guard let self = self else { return }
+            self.updateReminder(reminder)
+            // Compare the `id` of the current reminder's reminder list with
+            // the `id` of the callback reminder's reminder list.
+            if currentReminder.reminderList.id != reminder.reminderList.id {
+                // If the list changed, attempting to reload when the current reminder is no longer
+                // preset in Reminders will result in a snapshot error.
+                self.changeReminderListSnapshot()
+            } else {
+                self.updateSnapshot(reloading: [reminder.id])
+            }
         }
         let navigationController = UINavigationController(rootViewController: viewController)
         present(navigationController, animated: true)

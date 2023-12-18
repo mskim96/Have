@@ -1,5 +1,6 @@
 /**
- * Abstract - Date picker content view.
+ * Abstract:
+ * Date picker content view.
  */
 
 import UIKit

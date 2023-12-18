@@ -1,3 +1,8 @@
+/**
+ * Abstract:
+ * Configure the DiffableDataSource for the Reminders view controller.
+ */
+
 import UIKit
 
 extension RemindersViewController {
@@ -11,21 +16,27 @@ extension RemindersViewController {
         updateSnapshot()
     }
     
-    // TODO: Core Data 구현 완료 시 update 필요
     func updateSnapshot(reloading ids: [Reminder.ID] = []) {
         var snapshot = NSDiffableDataSourceSnapshot<Int, Reminder.ID>()
         snapshot.appendSections([0])
-        snapshot.appendItems(reminders.map { $0.id })
+        snapshot.appendItems(filteredReminders.map { $0.id })
         if !ids.isEmpty {
             snapshot.reloadItems(ids)
         }
         dataSource.apply(snapshot)
     }
     
+    func changeReminderListSnapshot() {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, Reminder.ID>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(filteredReminders.map { $0.id })
+        dataSource.apply(snapshot)
+    }
+    
     // TODO: Editable 에 Cell registration 분기 및 event 정의
     // TODO: ** 이후 Custom cell 처리 **
     func cellRegistrationHandler(cell: UICollectionViewListCell, indexPath: IndexPath, id: Reminder.ID) {
-        let reminder = reminders.getReminder(withId: id)
+        let reminder = reminderRepository.getReminder(withId: id)
         
         var contentConfiguration = cell.defaultContentConfiguration()
         contentConfiguration.text = reminder.title
@@ -48,36 +59,26 @@ extension RemindersViewController {
         cell.contentConfiguration = contentConfiguration
     }
     
-    // TODO: Core Data 구현 완료 시 update 필요
     func updateReminder(_ reminder: Reminder) {
-        let index = reminders.getIndex(withId: reminder.id)
-        reminders[index] = reminder
+        reminderRepository.updateReminder(reminder)
     }
     
-    // TODO: Core Data 구현 완료 시 update 필요
     func completedReminder(withId id: Reminder.ID) {
-        var reminder = reminders.getReminder(withId: id)
-        reminder.isCompleted.toggle()
-        updateReminder(reminder)
+        reminderRepository.completeReminder(withId: id)
         updateSnapshot(reloading: [id])
     }
     
-    // TODO: Core Data 구현 완료 시 update 필요
     func flagReminder(withId id: Reminder.ID) {
-        var reminder = reminders.getReminder(withId: id)
-        reminder.isFlagged.toggle()
-        updateReminder(reminder)
-    }
-
-    // TODO: Core Data 구현 완료 시 update 필요
-    func addReminder(_ reminder: Reminder) {
-        reminders.append(reminder)
+        reminderRepository.flagReminder(withId: id)
+        updateSnapshot()
     }
     
-    // TODO: Core Data 구현 완료 시 update 필요
+    func addReminder(_ reminder: Reminder) {
+        reminderRepository.addReminder(reminder)
+    }
+    
     func deleteReminder(withId id: Reminder.ID) {
-        let index = reminders.getIndex(withId: id)
-        reminders.remove(at: index)
+        reminderRepository.deleteReminder(withId: id)
     }
     
     /// Complete button configuration.

@@ -1,5 +1,6 @@
 /**
- * Abstract - Placeholder Text view.
+ * Abstract:
+ * Placeholder Text view.
  */
 
 import UIKit

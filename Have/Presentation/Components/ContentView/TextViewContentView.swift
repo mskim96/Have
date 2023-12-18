@@ -1,5 +1,6 @@
 /**
- * Abstract - Text view content view.
+ * Abstract:
+ * Text view content view.
  */
 
 import UIKit

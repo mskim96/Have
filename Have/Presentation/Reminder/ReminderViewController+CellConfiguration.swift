@@ -1,5 +1,6 @@
 /**
- * Abstract - Configure cells for rows in the Reminder View Controller.
+ * Abstract:
+ * Configure cells for rows in the Reminder View Controller.
  */
 
 import UIKit
@@ -93,20 +94,41 @@ extension ReminderViewController {
         return contentConfiguration
     }
     
+    /// Configuration for the reminder list of the reminder.
+    func reminderListConfiguration(for cell: UICollectionViewListCell, with reminderList: ReminderList)
+    -> UIListContentConfiguration {
+        var contentConfiguration = UIListContentConfiguration.valueCell()
+        contentConfiguration.text = NSLocalizedString("List", comment: "Reminder list row text")
+        if reminderList.type != .userCreated {
+            let firstUserCreatedReminderList = reminderListRepository.getUserCreatedReminderList()
+            contentConfiguration.secondaryText = firstUserCreatedReminderList.name
+            contentConfiguration.image = firstUserCreatedReminderList.image
+        } else {
+            contentConfiguration.secondaryText = reminderList.name
+            contentConfiguration.image = reminderList.image
+        }
+        
+        cell.accessories = [
+            .disclosureIndicator()
+        ]
+        
+        return contentConfiguration
+    }
+    
     /// Configuration for switches in date and time rows.
     func switchConfiguration(at row: Row) -> UICellAccessory.CustomViewConfiguration {
         let toggleSwitch = UISwitch()
         switch row {
         case .date:
             dateSwitch = toggleSwitch
-            toggleSwitch.isOn = reminder.dueDate != nil
+            toggleSwitch.isOn = workingReminder.dueDate != nil
             toggleSwitch.addTarget(self, action: #selector(didToggleDateSwitch(_:)), for: .valueChanged)
         case .time:
             timeSwitch = toggleSwitch
-            toggleSwitch.isOn = reminder.dueTime != nil
+            toggleSwitch.isOn = workingReminder.dueTime != nil
             toggleSwitch.addTarget(self, action: #selector(didToggleTimeSwitch(_:)), for: .valueChanged)
         case .flag:
-            toggleSwitch.isOn = reminder.isFlagged
+            toggleSwitch.isOn = workingReminder.isFlagged
             toggleSwitch.addTarget(self, action: #selector(didToggleFlagSwitch(_:)), for: .valueChanged)
         default: break
         }
@@ -139,7 +161,7 @@ extension ReminderViewController {
     /// Enabled the save button if the working reminder's title exists.
     /// otherwise, set it to disabled.
     ///
-    func updateSaveButtonItemEnabledState() {
+    private func updateSaveButtonItemEnabledState() {
         navigationItem.rightBarButtonItem?.isEnabled = !workingReminder.title.isEmpty
     }
 }

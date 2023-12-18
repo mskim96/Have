@@ -1,14 +1,19 @@
 /**
- * Abstract - Reminder detail view controller.
+ * Abstract:
+ * Reminder detail view controller.
  */
 
 import UIKit
 
 class ReminderViewController: UIViewController {
     
-    // Indicates whether it's a new reminder or an edited reminder.
+    let reminderListRepository = ReminderListMockRepository.mock
+    
+    /// Indicates whether it's a new reminder or an edited reminder.
     var isAddingNewReminder = false
-
+    /// Indicates user-selected reminder list type.
+    var fromReminderListType: ReminderListType = .builtInAll
+    
     /// Reminder selected from the list of reminders.
     var reminder: Reminder {
         didSet {
@@ -42,7 +47,7 @@ class ReminderViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureNavigationBar()
+        setupNavigationBar()
         configureHierarachy()
         configureDataSource()
     }
@@ -55,18 +60,7 @@ extension ReminderViewController {
     func configureHierarachy() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
         collectionView.delegate = self
-        
-        view.addSubview(collectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate(
-            [
-                collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-                collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-            ]
-        )
+        view.addFullScreenSubview(collectionView)
     }
     
     private func createLayout() -> UICollectionViewLayout {
@@ -74,18 +68,18 @@ extension ReminderViewController {
         return UICollectionViewCompositionalLayout.list(using: listConfiguration)
     }
     
-    private func configureNavigationBar() {
+    private func setupNavigationBar() {
         // Related Appereance.
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()
         navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
         
         let editReminderTitle = NSLocalizedString("Detail", comment: "Reminder view controller title")
-        let addNewReminderTitle = NSLocalizedString("Add Reminder", comment: "Add Reminder view controller title")
+        let addNewReminderTitle = NSLocalizedString("New Reminder", comment: "New Reminder view controller title")
         
         // title and button items.
         navigationItem.title = isAddingNewReminder ? addNewReminderTitle : editReminderTitle
-
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .cancel,
             target: self,
@@ -113,6 +107,7 @@ extension ReminderViewController: UICollectionViewDelegate {
         switch row {
         case .date: toggleExpandableRowSnapshot(at: row)
         case .time: toggleExpandableRowSnapshot(at: row)
+        case .reminderList: navigateSelectReminderListViewController(with: workingReminder.reminderList)
         default: break
         }
         collectionView.deselectItem(at: indexPath, animated: true)
@@ -125,6 +120,7 @@ extension ReminderViewController: UICollectionViewDelegate {
         switch row {
         case .date: return workingReminder.dueDate != nil
         case .time: return workingReminder.dueTime != nil
+        case .reminderList: return true
         default: return false
         }
     }

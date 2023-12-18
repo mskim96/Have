@@ -1,5 +1,6 @@
 /**
- * Abstract - Add Reminder button that includes both icon and text.
+ * Abstract:
+ * Add Reminder button that includes both icon and text.
  */
 
 import UIKit
@@ -18,7 +19,7 @@ class AddReminderButton: UIButton {
     private func configure() {
         let imageConfiguration = UIImage.SymbolConfiguration(weight: .heavy)
         let image = UIImage(systemName: "plus.circle.fill", withConfiguration: imageConfiguration)
-        let label = NSLocalizedString("Add Reminder", comment: "Add reminder toolbar button")
+        let label = NSLocalizedString("New Reminder", comment: "Add reminder toolbar button")
         let title = NSAttributedString(
             string: label,
             attributes: [

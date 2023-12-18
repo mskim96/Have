@@ -1,12 +1,14 @@
 /**
+ * Abstract:
  * Configure the DiffableDataSource for the Reminder view controller.
  */
+
 import UIKit
 
 extension ReminderViewController {
     
     private typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Row>
-   
+    
     func configureDataSource() {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Row> { (cell, indexPath, row) in
             switch row {
@@ -24,6 +26,8 @@ extension ReminderViewController {
                 cell.contentConfiguration = self.timeConfiguration(for: cell, with: self.workingReminder.dueTime)
             case .flag:
                 cell.contentConfiguration = self.flagConfiguration(for: cell, at: row)
+            case .reminderList:
+                cell.contentConfiguration = self.reminderListConfiguration(for: cell, with: self.workingReminder.reminderList)
             }
         }
         
@@ -33,17 +37,26 @@ extension ReminderViewController {
         }
         
         initialSnapshot()
+        additionalInitIfNeeded(with: fromReminderListType)
     }
     
     private func initialSnapshot() {
         var snapshot = Snapshot()
-        snapshot.appendSections([.titleAndNotes, .dateAndTime, .flag])
+        snapshot.appendSections([.titleAndNotes, .dateAndTime, .flag, .reminderList])
         snapshot.appendItems([.editableTitle, .editableNotes], toSection: .titleAndNotes)
         snapshot.appendItems(
             [.date, .time ],
             toSection: .dateAndTime
         )
         snapshot.appendItems([.flag], toSection: .flag)
+        snapshot.appendItems([.reminderList], toSection: .reminderList)
+        dataSource.apply(snapshot)
+    }
+    
+    /// reload snapshot if reminder list to be changed.
+    func changeReminderListSnapshot() {
+        var snapshot = dataSource.snapshot()
+        snapshot.reloadItems([.reminderList])
         dataSource.apply(snapshot)
     }
     
@@ -51,10 +64,8 @@ extension ReminderViewController {
     func toggleExpandableRowSnapshot(at row: Row) {
         var snapshot = dataSource.snapshot()
         switch row {
-        case .date: 
-            toggleExpandableSnapshotIfNeeded(&snapshot, expandRow: .editableDate, collapseRow: .editableTime, afterRow: .date)
-        case .time: 
-            toggleExpandableSnapshotIfNeeded(&snapshot, expandRow: .editableTime, collapseRow: .editableDate, afterRow: .time)
+        case .date: toggleExpandableSnapshotIfNeeded(&snapshot, expandRow: .editableDate, collapseRow: .editableTime, afterRow: .date)
+        case .time: toggleExpandableSnapshotIfNeeded(&snapshot, expandRow: .editableTime, collapseRow: .editableDate, afterRow: .time)
         default: break
         }
         dataSource.apply(snapshot)
@@ -69,10 +80,8 @@ extension ReminderViewController {
     func toggleSwitchSnapshot(for row: Row, isOn: Bool) {
         var snapshot = dataSource.snapshot()
         switch row {
-        case .date: 
-            toggleExpandableSnapshot(&snapshot, expand: isOn, expandRow: .editableDate, collapseRow: .editableTime, afterRow: .date)
-        case .time: 
-            toggleExpandableSnapshot(&snapshot, expand: isOn, expandRow: .editableTime, collapseRow: .editableDate, afterRow: .time)
+        case .date: toggleExpandableSnapshot(&snapshot, expand: isOn, expandRow: .editableDate, collapseRow: .editableTime, afterRow: .date)
+        case .time: toggleExpandableSnapshot(&snapshot, expand: isOn, expandRow: .editableTime, collapseRow: .editableDate, afterRow: .time)
         default: break
         }
         updateSecondaryText(for: .date) { workingReminder in workingReminder.dueDate?.detailDayText() }
@@ -98,10 +107,29 @@ extension ReminderViewController {
         }
     }
     
-    func updateFlagged(to newFlag: Bool) {
+    func updateFlagged() {
         var newWorkingReminder = workingReminder
         newWorkingReminder.isFlagged.toggle()
         workingReminder = newWorkingReminder
+    }
+    
+    func updateReminderList(to reminderList: ReminderList) {
+        var newWorkingReminder = workingReminder
+        newWorkingReminder.reminderList = reminderList
+        workingReminder = newWorkingReminder
+    }
+    
+    /// Additional Initialization Based on ReminderListType
+    ///
+    /// Pre-initializes some aspects based on the built-in ReminderListType.
+    /// e.g if the list type is builtInToday, it initializes the current date to today.
+    ///
+    func additionalInitIfNeeded(with reminderListType: ReminderListType) {
+        switch reminderListType {
+        case .builtInToday: updateDate(to: Date())
+        case .builtInFlag: updateFlagged()
+        default: break
+        }
     }
     
     /// Toggle expand or collapse the row.
@@ -160,9 +188,11 @@ extension ReminderViewController {
             if snapshot.itemIdentifiers.contains(expandRow) {
                 snapshot.deleteItems([expandRow])
             }
+            // ----------------------------------------------------------------------
             // 해당 값에 collapseRow 를 넣으면
-            // 1. Date Switch, Time Switch 가 전부 켜져있고 dateRow expand state 일 경우 Time switch 를 끄면
-            //    dateRow 가 collapse 상태로 변해버림. 따라서 고정값을 임시로 넣어 처리.
+            // Date Switch, Time Switch 가 전부 켜져있고 dateRow expand state 일 경우
+            // Time switch 를 끄면 dateRow 가 collapse 상태로 변해버림. 따라서 고정값을 임시로 넣어 처리.
+            // ----------------------------------------------------------------------
             if snapshot.itemIdentifiers.contains(.editableTime) {
                 snapshot.deleteItems([.editableTime])
             }

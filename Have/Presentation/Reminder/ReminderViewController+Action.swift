@@ -1,5 +1,6 @@
 /**
- * Abstract - Actions for ReminderViewController.
+ * Abstract:
+ * Actions for ReminderViewController.
  */
 
 import UIKit
@@ -7,6 +8,9 @@ import UIKit
 extension ReminderViewController {
     
     /// Called when the user clicks save button.
+    ///
+    /// Save changes to the reminder.
+    ///
     @objc func didPressSaveButton(_ sender: UIBarButtonItem) {
         if workingReminder != reminder {
             reminder = workingReminder
@@ -15,12 +19,18 @@ extension ReminderViewController {
     }
     
     /// Called when the user clicks cancel button.
+    ///
+    /// Discard changes to the reminder.
+    ///
     @objc func didPressCancelButton(_ sender: UIBarButtonItem) {
         workingReminder = reminder
         dismiss(animated: true)
     }
     
     /// Called when the user clicks the switch button in Date row.
+    ///
+    /// Toggle the time value of the reminder.
+    ///
     @objc func didToggleDateSwitch(_ sender: UISwitch) {
         if sender.isOn {
             // Set date value to today. (nil -> Today)
@@ -36,6 +46,9 @@ extension ReminderViewController {
     }
     
     /// Called when the user clicks the switch button in Time row.
+    ///
+    /// Toggle the time value of the reminder.
+    ///
     @objc func didToggleTimeSwitch(_ sender: UISwitch) {
         if sender.isOn {
             // if date does not exist.
@@ -50,7 +63,18 @@ extension ReminderViewController {
         toggleSwitchSnapshot(for: .time, isOn: sender.isOn)
     }
     
+    /// Toggle the flagged state of the reminder.
     @objc func didToggleFlagSwitch(_ sender: UISwitch) {
-        updateFlagged(to: sender.isOn)
+        updateFlagged()
+    }
+    
+    /// Navigate to selecte reminder list with current reminder list.
+    func navigateSelectReminderListViewController(with reminderList: ReminderList) {
+        let viewController = SelectReminderListViewController(selectedReminderList: reminderList) {
+            [weak self] reminderList in
+            self?.updateReminderList(to: reminderList)
+            self?.changeReminderListSnapshot()
+        }
+        navigationController?.pushViewController(viewController, animated: true)
     }
 }
