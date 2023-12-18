@@ -15,7 +15,7 @@ extension RemindersViewController {
     
     /// Called when the user clicks the complete button.
     @objc func didPressAddReminderButton(_ sender: AddReminderButton) {
-        let setReminderList = reminderListRepository.getUserCreatedReminderList()
+        let setReminderList = reminderList.type == .userCreated ? reminderList : reminderListRepository.getUserCreatedReminderList()
         let reminder = Reminder(title: "", reminderList: setReminderList)
         let viewController = ReminderViewController(reminder: reminder) { [weak self] reminder in
             self?.addReminder(reminder)
