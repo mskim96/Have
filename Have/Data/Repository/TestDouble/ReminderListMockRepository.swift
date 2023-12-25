@@ -5,7 +5,7 @@
 
 import UIKit
 
-class ReminderListMockRepository: ReminderListRepository {
+class ReminderListMockRepository {
     
     static let mock = ReminderListMockRepository()
     
@@ -14,7 +14,12 @@ class ReminderListMockRepository: ReminderListRepository {
     }
     
     func getReminderList(withId id: ReminderList.ID) -> ReminderList {
-        return sampleReminderLists.getReminderList(withId: id)
+        let index = sampleReminderLists.firstIndex(where: { $0.id == id })
+        if let index = index {
+            return sampleReminderLists[index]
+        } else {
+            fatalError()
+        }
     }
     
     func addReminderList(_ reminderList: ReminderList) {
@@ -22,13 +27,21 @@ class ReminderListMockRepository: ReminderListRepository {
     }
     
     func updateReminderList(_ reminderList: ReminderList) {
-        let index = sampleReminderLists.getIndex(withId: reminderList.id)
-        sampleReminderLists[index] = reminderList
+        let index = sampleReminderLists.firstIndex(where: { $0.id == reminderList.id })
+        if let index = index {
+            sampleReminderLists[index] = reminderList
+        } else {
+            fatalError()
+        }
     }
     
     func deleteReminderList(withId id: ReminderList.ID) {
-        let index = sampleReminderLists.getIndex(withId: id)
-        sampleReminderLists.remove(at: index)
+        let index = sampleReminderLists.firstIndex(where: { $0.id == id })
+        if let index = index {
+            sampleReminderLists.remove(at: index)
+        } else {
+            fatalError()
+        }
     }
     
     func getUserCreatedReminderList() -> ReminderList {

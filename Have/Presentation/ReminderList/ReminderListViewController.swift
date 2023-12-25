@@ -7,16 +7,6 @@ import UIKit
 
 class ReminderListViewController: UIViewController {
     
-    // TODO: Add a section to choose the color of ReminderList.
-    enum Section: Hashable {
-        case listName
-    }
-    
-    // TODO: Add a row to choose the color of ReminderList.
-    enum Row: Hashable {
-        case listName
-    }
-    
     // Indicates whether it's a new reminder list or an edited reminder list.
     var isAddingNewReminderList = false
     
@@ -91,5 +81,20 @@ extension ReminderListViewController {
             target: self,
             action: #selector(didPressDoneButton)
         )
+    }
+}
+
+// MARK: - ReminderListViewController Section with Row for diffable datasource
+
+extension ReminderListViewController {
+    
+    // TODO: Add a section to choose the color of ReminderList.
+    enum Section: Hashable {
+        case listName
+    }
+    
+    // TODO: Add a row to choose the color of ReminderList.
+    enum Row: Hashable {
+        case listName
     }
 }

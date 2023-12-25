@@ -7,27 +7,26 @@ import UIKit
 
 class SelectReminderListViewController: UIViewController {
     
-    let reminderListRepository: ReminderListRepository = ReminderListMockRepository.mock
+    let reminderListRepository: ReminderListRepository = DefaultReminderListRepository()
     
-    /// Current selected reminder list.
-    var selectedReminderList: ReminderList {
+    /// Current selected reminder list reference id.
+    var selectedReminderListRefId: ReminderList.ID {
         didSet {
-            onChangeReminderList(selectedReminderList)
+            onChangeReminderList(selectedReminderListRefId)
         }
     }
     
     /// Get reminder lists from the repository and filter them by user-created.
-    var reminderLists: [ReminderList] {
-        return reminderListRepository.getReminderLists().filter { $0.type == .userCreated }
-    }
+    var reminderLists = [ReminderList]()
+    
     /// Closure for saving changes to the reminder list.
-    var onChangeReminderList: (ReminderList) -> Void
+    var onChangeReminderList: (ReminderList.ID) -> Void
     
     var collectionView: UICollectionView! = nil
     var dataSource: UICollectionViewDiffableDataSource<Int, ReminderList>! = nil
     
-    init(selectedReminderList: ReminderList, onChangeReminderList: @escaping (ReminderList) -> Void) {
-        self.selectedReminderList = selectedReminderList
+    init(selectedReminderListRefId: ReminderList.ID, onChangeReminderList: @escaping (ReminderList.ID) -> Void) {
+        self.selectedReminderListRefId = selectedReminderListRefId
         self.onChangeReminderList = onChangeReminderList
         super.init(nibName: nil, bundle: nil)
     }
@@ -41,6 +40,7 @@ class SelectReminderListViewController: UIViewController {
         setupNavigationBar()
         configureHierarchy()
         configureDataSource()
+        updateUIAfterDataFetched()
     }
 }
 
@@ -85,7 +85,7 @@ extension SelectReminderListViewController {
             contentConfiguration.text = reminderList.name
             contentConfiguration.image = reminderList.image
             // Show a checkmark accessory if the cell corresponds to the currently selected reminder list.
-            cell.accessories = reminderList == self.selectedReminderList ? [.checkmark(displayed: .always)] : []
+            cell.accessories = reminderList.id == self.selectedReminderListRefId ? [.checkmark(displayed: .always)] : []
             cell.contentConfiguration = contentConfiguration
         }
         
@@ -100,13 +100,21 @@ extension SelectReminderListViewController {
     func updateSnapshot() {
         var snapshot = NSDiffableDataSourceSnapshot<Int, ReminderList>()
         snapshot.appendSections([0])
-        snapshot.appendItems(reminderListRepository.getReminderLists().filter { $0.type == .userCreated })
-        dataSource.apply(snapshot)
+        snapshot.appendItems(reminderLists.filter { $0.type == .userCreated })
+        dataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    func updateUIAfterDataFetched() {
+        Task {
+            let reminderLists = try await reminderListRepository.getReminderLists()
+            self.reminderLists = reminderLists
+            self.updateSnapshot()
+        }
     }
     
     /// Update the selected reminder list with new reminder list.
     func updateCurrentReminderList(_ reminderList: ReminderList) {
-        selectedReminderList = reminderList
+        selectedReminderListRefId = reminderList.id
     }
 }
 

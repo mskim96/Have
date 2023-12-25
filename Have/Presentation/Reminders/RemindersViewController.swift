@@ -7,20 +7,16 @@ import UIKit
 
 class RemindersViewController: UIViewController {
     
-    let reminderListRepository = ReminderListMockRepository.mock
-    let reminderRepository: ReminderRepository = ReminderMockRepository.mock
+    let reminderListRepository: ReminderListRepository = DefaultReminderListRepository()
+    let reminderRepository: ReminderRepository = DefaultReminderRepository()
     
     /// Current reminder list from ReminderListsViewController.
     var reminderList: ReminderList
     /// The Reminders filtered by the current reminder list.
-    var filteredReminders: [Reminder] {
-        return reminderRepository.getReminders().filter {
-            reminderList.type.shouldInclude(reminder: $0, reminderList: reminderList )
-        }
-    }
+    var filteredReminders = [Reminder]()
     
     var collectionView: UICollectionView! = nil
-    var dataSource: UICollectionViewDiffableDataSource<Int, Reminder.ID>! = nil
+    var dataSource: UICollectionViewDiffableDataSource<Int, Reminder>! = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +25,11 @@ class RemindersViewController: UIViewController {
         setupToolbar()
         configureHierarchy()
         configureDataSource()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateUIAfterFetchData()
     }
     
     init(reminderList: ReminderList) {
@@ -99,12 +100,12 @@ extension RemindersViewController {
     
     /// Configure reminder swipe actions.
     private func configureSwipeAction(for indexPath: IndexPath?) -> UISwipeActionsConfiguration? {
-        guard let indexPath, let id = dataSource.itemIdentifier(for: indexPath) else { return nil }
+        guard let indexPath, let reminder = dataSource.itemIdentifier(for: indexPath) else { return nil }
         let configuration = UISwipeActionsConfiguration(
             actions: [
-                configureDeleteAction(withId: id),
-                configureFlagAction(withId: id),
-                configurDetailAction(withId: id)
+                configureDeleteAction(with: reminder),
+                configureFlagAction(with: reminder),
+                configurDetailAction(with: reminder)
             ]
         )
         // Set to disabled full swipe action.
@@ -119,8 +120,8 @@ extension RemindersViewController: UICollectionViewDelegate {
     
     /// Navigate to ReminderViewController with the reminder when the user clicked the cell.
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        let id = filteredReminders[indexPath.item].id
-        navigateToReminderViewController(withId: id)
+        let reminder = filteredReminders[indexPath.item]
+        navigateToReminderViewController(with: reminder)
         return false
     }
 }

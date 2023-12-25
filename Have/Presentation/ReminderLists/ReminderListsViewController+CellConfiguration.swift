@@ -15,7 +15,7 @@ extension ReminderListsViewController {
         contentConfiguration.image = reminderList.image
         
         let reminderCount = reminderList.type.numberOfFilteredReminders(
-            reminders: reminderRepository.getReminders(),
+            reminders: reminders,
             reminderList: reminderList
         )
         cell.accessories = [
@@ -36,7 +36,7 @@ extension ReminderListsViewController {
         contentConfiguration.image = reminderList.image
         
         let reminderCount = reminderList.type.numberOfFilteredReminders(
-            reminders: reminderRepository.getReminders(),
+            reminders: reminders,
             reminderList: reminderList
         )
         cell.accessories = [

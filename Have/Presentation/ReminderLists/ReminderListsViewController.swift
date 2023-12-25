@@ -7,12 +7,12 @@ import UIKit
 
 class ReminderListsViewController: UIViewController {
     
-    var reminderListRepository = ReminderListMockRepository.mock
-    var reminderRepository = ReminderMockRepository.mock
+    // Repositories
+    let reminderListRepository: ReminderListRepository = DefaultReminderListRepository()
+    let reminderRepository: ReminderRepository = DefaultReminderRepository()
     
-    enum Section {
-        case builtIn, userCreated
-    }
+    var reminderLists = [ReminderList]()
+    var reminders = [Reminder]()
     
     var collectionView: UICollectionView! = nil
     var dataSource: UICollectionViewDiffableDataSource<Section, ReminderList>! = nil
@@ -28,7 +28,7 @@ class ReminderListsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        updateSnapshot(reloading: reminderListRepository.getReminderLists())
+        updateUIAfterAllDataFetched()
     }
 }
 
@@ -101,6 +101,8 @@ extension ReminderListsViewController {
     }
 }
 
+// MARK: - UICollectionViewDelegate
+
 extension ReminderListsViewController: UICollectionViewDelegate {
     
     /// Set ReminderListsViewController to `Editmode`.
@@ -108,17 +110,21 @@ extension ReminderListsViewController: UICollectionViewDelegate {
         super.setEditing(editing, animated: animated)
         collectionView.isEditing = editing
         // Update the snapshot to reflect changes in the appearance of lists.
-        updateSnapshot()
+        initialSnapshot()
     }
     
     /// Called when the user clicks the switch button in Date row.
     ///
     /// Navigate reminders view controller.
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        let section = indexPath.section
-        let row = indexPath.row
-        let reminderList = reminderListRepository.getReminderLists()[section * 4 + row]
-        navigateToRemindersViewController(with: reminderList)
+        let selectedReminderList = reminderLists[indexPath.section * ReminderList.builtInReminderLists.count + indexPath.row]
+        navigateToRemindersViewController(with: selectedReminderList)
         return false
     }
+}
+
+// MARK: - RemindeListsViewController Section for diffable datasource
+
+enum Section {
+    case builtIn, userCreated
 }

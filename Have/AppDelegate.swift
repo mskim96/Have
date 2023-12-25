@@ -1,5 +1,6 @@
 import UIKit
 import CoreData
+import Firebase
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -9,6 +10,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()
         UINavigationBar.appearance().standardAppearance = navBarAppearance
+        // Configure firebase.
+        FirebaseApp.configure()
         return true
     }
     

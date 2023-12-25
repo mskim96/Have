@@ -12,7 +12,6 @@ extension ReminderListsViewController {
         let reminderList = ReminderList(name: "")
         let viewController = ReminderListViewController(reminderList: reminderList) { [weak self] reminderList in
             self?.addReminderList(reminderList)
-            self?.updateSnapshot()
         }
         viewController.isAddingNewReminderList = true
         let navigationController = UINavigationController(rootViewController: viewController)
@@ -21,16 +20,22 @@ extension ReminderListsViewController {
     
     /// Navigate to ReminderViewController with new reminder.
     @objc func didPressAddReminderButton(_ sender: UIBarButtonItem) {
-        let setReminderList = reminderListRepository.getUserCreatedReminderList()
-        let reminder = Reminder(title: "", reminderList: setReminderList)
-        let viewController = ReminderViewController(reminder: reminder) { [weak self] reminder in
-            guard let self = self else { return }
-            self.addReminder(reminder)
-            self.updateSnapshot(reloading: self.reminderListRepository.getReminderLists())
+        Task {
+            let firstOrCreateReminderList = try await reminderListRepository.getUserCreatedReminderList()
+            let reminder = Reminder(title: "", reminderListRefId: firstOrCreateReminderList.id)
+            await MainActor.run {
+                let viewController = ReminderViewController(
+                    fromReminderListType: .userCreated,
+                    reminder: reminder
+                ) { [weak self] reminder in
+                    guard let self = self else { return }
+                    self.addReminder(reminder)
+                }
+                viewController.isAddingNewReminder = true
+                let navigationController = UINavigationController(rootViewController: viewController)
+                present(navigationController, animated: true)
+            }
         }
-        viewController.isAddingNewReminder = true
-        let navigationController = UINavigationController(rootViewController: viewController)
-        present(navigationController, animated: true)
     }
     
     /// Navigate to ReminderListViewController with current reminder list.
@@ -41,7 +46,6 @@ extension ReminderListsViewController {
     func navigateToReminderListViewController(with reminderList: ReminderList) {
         let viewController = ReminderListViewController(reminderList: reminderList) { [weak self] reminderList in
             self?.updateReminderList(reminderList)
-            self?.updateSnapshot(reloading: [reminderList])
         }
         let navigationController = UINavigationController(rootViewController: viewController)
         present(navigationController, animated: true)
@@ -96,25 +100,22 @@ extension ReminderListsViewController {
     ///     - reminderList: Used a swipe gesture on the reminder list.
     ///
     func configureDeleteAction(with reminderList: ReminderList) -> UIContextualAction {
-        let deleteAction = UIContextualAction(style: .destructive, title: "") { [weak self] _, _, completion in
+        // TAG: action 의 style 을 destructive 으로 사용안하는 이유는, 버튼이 collapse 될 때 셀자체가 튀는 애니메이션 발생.
+        let deleteAction = UIContextualAction(style: .normal, title: "") { [weak self] _, _, completion in
             guard let self = self else { return }
-            // Show confirmation dialog if the reminderList has one or more reminders.
-            if reminderRepository.getReminders().contains(where: { $0.reminderList.id == reminderList.id }) {
+            if reminders.contains(where: { $0.reminderListRefId == reminderList.id }) {
                 deleteReminderListAlert(reminderListName: reminderList.name) {
-                    self.deleteReminderLists(reminderList)
-                    self.reminderRepository.deleteReminder(withReminderList: reminderList)
-                    self.updateSnapshot(reloading: self.reminderListRepository.getReminderLists())
+                    self.deleteReminderListAndRelatedReminder(reminderList)
                 }
             } else {
-                self.deleteReminderLists(reminderList)
-                self.reminderRepository.deleteReminder(withReminderList: reminderList)
-                self.updateSnapshot(reloading: self.reminderListRepository.getReminderLists())
+                self.deleteReminderList(reminderList)
             }
             completion(true)
         }
         let deleteImageConfiguration = UIImage.SymbolConfiguration(textStyle: .title2)
         let deleteImage = UIImage(systemName: "trash.fill", withConfiguration: deleteImageConfiguration)
         deleteAction.image = deleteImage
+        deleteAction.backgroundColor = .systemRed
         return deleteAction
     }
     

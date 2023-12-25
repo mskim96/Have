@@ -68,11 +68,11 @@ extension ReminderViewController {
         updateFlagged()
     }
     
-    /// Navigate to selecte reminder list with current reminder list.
-    func navigateSelectReminderListViewController(with reminderList: ReminderList) {
-        let viewController = SelectReminderListViewController(selectedReminderList: reminderList) {
-            [weak self] reminderList in
-            self?.updateReminderList(to: reminderList)
+    /// Navigate to selecte reminder list reference id with current reminder list.
+    func navigateSelectReminderListViewController(with reminderListRefId: String) {
+        let viewController = SelectReminderListViewController(selectedReminderListRefId: reminderListRefId) {
+            [weak self] reminderListId in
+            self?.updateReminderList(withId: reminderListId)
             self?.changeReminderListSnapshot()
         }
         navigationController?.pushViewController(viewController, animated: true)

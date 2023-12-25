@@ -15,8 +15,9 @@ import Foundation
 ///     - dueTime: due time of the reminder
 ///     - isCompleted: whether or not the reminder is completed
 ///     - isFlagged: whether or not the reminder is flagged.
+///     - reminderListRefID: reference id of the ReminderList to which the reminder belongs
 ///
-struct Reminder: Equatable, Identifiable {
+struct Reminder: Equatable, Identifiable, Hashable {
     var id: String = UUID().uuidString
     var title: String
     var notes: String?
@@ -24,17 +25,5 @@ struct Reminder: Equatable, Identifiable {
     var dueTime: Date?
     var isCompleted: Bool = false
     var isFlagged: Bool = false
-    var reminderList: ReminderList
-}
-
-extension [Reminder] {
-    func getReminder(withId id: Reminder.ID) -> Reminder {
-        guard let index = firstIndex(where: { $0.id == id }) else { fatalError() }
-        return self[index]
-    }
-    
-    func getIndex(withId id: Reminder.ID) -> Int {
-        guard let index = firstIndex(where: { $0.id == id }) else { fatalError() }
-        return index
-    }
+    var reminderListRefId: String
 }

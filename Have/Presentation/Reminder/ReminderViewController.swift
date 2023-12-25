@@ -7,12 +7,12 @@ import UIKit
 
 class ReminderViewController: UIViewController {
     
-    let reminderListRepository = ReminderListMockRepository.mock
+    let reminderListRepository: ReminderListRepository = DefaultReminderListRepository()
     
     /// Indicates whether it's a new reminder or an edited reminder.
     var isAddingNewReminder = false
     /// Indicates user-selected reminder list type.
-    var fromReminderListType: ReminderListType = .builtInAll
+    var fromReminderListType: ReminderListType
     
     /// Reminder selected from the list of reminders.
     var reminder: Reminder {
@@ -20,6 +20,8 @@ class ReminderViewController: UIViewController {
             onChangeReminder(reminder)
         }
     }
+    
+    var currentReminderList: ReminderList? = nil
     
     /// Working reminder for when the if user edits a reminder.
     var workingReminder: Reminder
@@ -32,8 +34,14 @@ class ReminderViewController: UIViewController {
     /// Switches to control based on the state of the working reminder.
     var dateSwitch: UISwitch! = nil
     var timeSwitch: UISwitch! = nil
+    var flagSwitch: UISwitch! = nil
     
-    init(reminder: Reminder, onChangeReminder: @escaping (Reminder) -> Void) {
+    init(
+        fromReminderListType: ReminderListType,
+        reminder: Reminder,
+        onChangeReminder: @escaping (Reminder) -> Void
+    ) {
+        self.fromReminderListType = fromReminderListType
         self.reminder = reminder
         self.workingReminder = reminder
         self.onChangeReminder = onChangeReminder
@@ -50,6 +58,11 @@ class ReminderViewController: UIViewController {
         setupNavigationBar()
         configureHierarachy()
         configureDataSource()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateUIAfterDataFetched()
     }
 }
 
@@ -107,7 +120,8 @@ extension ReminderViewController: UICollectionViewDelegate {
         switch row {
         case .date: toggleExpandableRowSnapshot(at: row)
         case .time: toggleExpandableRowSnapshot(at: row)
-        case .reminderList: navigateSelectReminderListViewController(with: workingReminder.reminderList)
+        case .reminderList:
+            navigateSelectReminderListViewController(with: workingReminder.reminderListRefId)
         default: break
         }
         collectionView.deselectItem(at: indexPath, animated: true)
@@ -122,6 +136,75 @@ extension ReminderViewController: UICollectionViewDelegate {
         case .time: return workingReminder.dueTime != nil
         case .reminderList: return true
         default: return false
+        }
+    }
+}
+
+// MARK: - ReminderViewController Section with Row for diffable datasource
+
+extension ReminderViewController {
+    
+    enum Section: Int, Hashable {
+        case titleAndNotes
+        case dateAndTime
+        case flag
+        case reminderList
+    }
+    
+    enum Row: Hashable {
+        case editableTitle
+        case editableNotes
+        case date
+        case editableDate
+        case time
+        case editableTime
+        case flag
+        case reminderList
+        
+        var image: UIImage? {
+            guard let imageName = imageName else { return nil }
+            let configuration = UIImage.SymbolConfiguration(textStyle: .headline)
+            return UIImage(systemName: imageName, withConfiguration: configuration)
+        }
+        
+        private var imageName: String? {
+            switch self {
+            case .date: return "calendar"
+            case .time: return "clock"
+            case .flag: return "flag.fill"
+            default: return nil
+            }
+        }
+    }
+    
+    /// Get text for row's title.
+    ///
+    /// - Parameters:
+    ///     - row: Row enum class
+    ///
+    /// - Returns: title text for each cell
+    ///
+    func text(for row: Row) -> String? {
+        switch row {
+        case .date: return NSLocalizedString("Date", comment: "Reminder Date row text")
+        case .time: return NSLocalizedString("Time", comment: "Reminder Time row text")
+        case .flag: return NSLocalizedString("Flag", comment: "Reminder Flag row text")
+        default: return nil
+        }
+    }
+    
+    /// Get date or time text for date row and time row.
+    ///
+    /// - Parameters:
+    ///     - row: Row enum class
+    ///
+    /// - Returns: formatted text for date or time row.
+    ///
+    func dateTimeText(for row: Row) -> String? {
+        switch row {
+        case .date: return workingReminder.dueDate?.detailDayText()
+        case .time: return workingReminder.dueTime?.timeText()
+        default: return nil
         }
     }
 }

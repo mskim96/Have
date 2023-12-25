@@ -15,41 +15,52 @@ extension RemindersViewController {
     
     /// Called when the user clicks the complete button.
     @objc func didPressAddReminderButton(_ sender: AddReminderButton) {
-        let setReminderList = reminderList.type == .userCreated ? reminderList : reminderListRepository.getUserCreatedReminderList()
-        let reminder = Reminder(title: "", reminderList: setReminderList)
-        let viewController = ReminderViewController(reminder: reminder) { [weak self] reminder in
-            self?.addReminder(reminder)
-            self?.updateSnapshot()
+        Task {
+            let userCreatedReminderListOrNew = reminderList.type == .userCreated ?
+            reminderList : try await reminderListRepository.getUserCreatedReminderList()
+            
+            let reminder = Reminder(title: "", reminderListRefId: userCreatedReminderListOrNew.id)
+            await MainActor.run {
+                let viewController = ReminderViewController(
+                    fromReminderListType: reminderList.type,
+                    reminder: reminder
+                ) { [weak self] reminder in
+                    self?.addReminder(reminder)
+                }
+                viewController.isAddingNewReminder = true
+                
+                let navigationController = UINavigationController(rootViewController: viewController)
+                present(navigationController, animated: true)
+            }
         }
-        viewController.isAddingNewReminder = true
-        viewController.fromReminderListType = reminderList.type
-        
-        let navigationController = UINavigationController(rootViewController: viewController)
-        present(navigationController, animated: true)
     }
     
     /// Present the reminder detail view controller modally.
     ///
     /// - Parameters:
-    ///     - id: Reminder id for navigate reminder detail view controller.
+    ///     - reminder: Reminder for navigate reminder detail view controller.
     ///
-    func navigateToReminderViewController(withId id: Reminder.ID) {
-        let currentReminder = reminderRepository.getReminder(withId: id)
-        let viewController = ReminderViewController(reminder: currentReminder) { [weak self] reminder in
-            guard let self = self else { return }
-            self.updateReminder(reminder)
-            // Compare the `id` of the current reminder's reminder list with
-            // the `id` of the callback reminder's reminder list.
-            if currentReminder.reminderList.id != reminder.reminderList.id {
-                // If the list changed, attempting to reload when the current reminder is no longer
-                // preset in Reminders will result in a snapshot error.
-                self.changeReminderListSnapshot()
-            } else {
-                self.updateSnapshot(reloading: [reminder.id])
+    func navigateToReminderViewController(with reminder: Reminder) {
+        Task {
+            let viewController = ReminderViewController(
+                fromReminderListType: reminderList.type,
+                reminder: reminder
+            ) { [weak self] reminderResult in
+                guard let self = self else { return }
+                self.updateReminder(reminderResult)
+                // Compare the `id` of the current reminder's reminder list with
+                // the `id` of the callback reminder's reminder list.
+                if reminder.reminderListRefId != reminderResult.reminderListRefId {
+                    // If the list changed, attempting to reload when the current reminder is no longer
+                    // preset in Reminders will result in a snapshot error.
+                    self.changeReminderListSnapshot()
+                } else {
+                    self.updateSnapshot(reloading: [reminder])
+                }
             }
+            let navigationController = UINavigationController(rootViewController: viewController)
+            present(navigationController, animated: true)
         }
-        let navigationController = UINavigationController(rootViewController: viewController)
-        present(navigationController, animated: true)
     }
 }
 
@@ -62,15 +73,15 @@ extension RemindersViewController {
     /// - Parameters:
     ///     - id: The identifier of the reminder
     ///
-    func configureDeleteAction(withId id: Reminder.ID) -> UIContextualAction {
+    func configureDeleteAction(with reminder: Reminder) -> UIContextualAction {
         let deleteActionTitle = NSLocalizedString("Delete", comment: "Delete action button title")
-        
-        return UIContextualAction(style: .destructive, title: deleteActionTitle) {
+        let deleteAction = UIContextualAction(style: .destructive, title: deleteActionTitle) {
             [weak self] _, _, completion in
-            self?.deleteReminder(withId: id)
-            self?.updateSnapshot()
+            guard let self = self else { return }
+            self.deleteReminder(reminder)
             completion(false)
         }
+        return deleteAction
     }
     
     /// Configure a swipe action for navigate to the reminder view controller.
@@ -78,12 +89,12 @@ extension RemindersViewController {
     /// - Parameters:
     ///     - id: The identifier of the reminder
     ///
-    func configurDetailAction(withId id: Reminder.ID) -> UIContextualAction {
+    func configurDetailAction(with reminder: Reminder) -> UIContextualAction {
         let detailActionTitle = NSLocalizedString("Detail", comment: "Detail action button title")
         
         return UIContextualAction(style: .normal, title: detailActionTitle) {
             [weak self] _, _, completion in
-            self?.navigateToReminderViewController(withId: id)
+            self?.navigateToReminderViewController(with: reminder)
             completion(false)
         }
     }
@@ -93,12 +104,12 @@ extension RemindersViewController {
     /// - Parameters:
     ///     - id: The identifier of the reminder
     ///
-    func configureFlagAction(withId id: Reminder.ID) -> UIContextualAction {
+    func configureFlagAction(with reminder: Reminder) -> UIContextualAction {
         let flagActionTitle = NSLocalizedString("Flag", comment: "Flag action button title")
         
         let flagAction = UIContextualAction(style: .normal, title: flagActionTitle) {
             [weak self] _, _, completion in
-            self?.flagReminder(withId: id)
+            self?.flagReminder(reminder)
             // Using ** completion(true) ** indicates that we want to trigger the collapse animation
             // when the user clicks complete.
             completion(true)

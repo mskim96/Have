@@ -27,7 +27,8 @@ extension ReminderViewController {
             case .flag:
                 cell.contentConfiguration = self.flagConfiguration(for: cell, at: row)
             case .reminderList:
-                cell.contentConfiguration = self.reminderListConfiguration(for: cell, with: self.workingReminder.reminderList)
+                guard let currentReminderList = self.currentReminderList else { return }
+                cell.contentConfiguration = self.reminderListConfiguration(for: cell, with: currentReminderList)
             }
         }
         
@@ -57,7 +58,7 @@ extension ReminderViewController {
     func changeReminderListSnapshot() {
         var snapshot = dataSource.snapshot()
         snapshot.reloadItems([.reminderList])
-        dataSource.apply(snapshot)
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
     
     /// Expand or collapse the row when user clicks.
@@ -89,6 +90,14 @@ extension ReminderViewController {
         dataSource.apply(snapshot, animatingDifferences: true)
     }
     
+    func updateUIAfterDataFetched() {
+        Task {
+            let reminderList = try await reminderListRepository.getReminderList(withId: workingReminder.reminderListRefId)
+            self.currentReminderList = reminderList
+            self.changeReminderListSnapshot()
+        }
+    }
+    
     func updateDate(to newDate: Date?) {
         var newWorkingReminder = workingReminder
         newWorkingReminder.dueDate = newDate
@@ -113,21 +122,23 @@ extension ReminderViewController {
         workingReminder = newWorkingReminder
     }
     
-    func updateReminderList(to reminderList: ReminderList) {
+    func updateReminderList(withId reminderListId: ReminderList.ID) {
         var newWorkingReminder = workingReminder
-        newWorkingReminder.reminderList = reminderList
+        newWorkingReminder.reminderListRefId = reminderListId
         workingReminder = newWorkingReminder
     }
     
-    /// Additional Initialization Based on ReminderListType
+    /// Additional Initialization Based on ReminderList
     ///
-    /// Pre-initializes some aspects based on the built-in ReminderListType.
+    /// Pre-initializes some aspects based on the built-in ReminderList.
     /// e.g if the list type is builtInToday, it initializes the current date to today.
     ///
     func additionalInitIfNeeded(with reminderListType: ReminderListType) {
         switch reminderListType {
-        case .builtInToday: updateDate(to: Date())
-        case .builtInFlag: updateFlagged()
+        case .builtInToday:
+            updateDate(to: Date())
+        case .builtInFlag:
+            updateFlagged()
         default: break
         }
     }

@@ -11,7 +11,7 @@ protocol ReminderListRepository {
     ///
     /// - Returns: available all reminder lists.
     ///
-    func getReminderLists() -> [ReminderList]
+    func getReminderLists() async throws -> [ReminderList]
     
     /// Retrieves reminder list for a specific reminder list.
     ///
@@ -20,32 +20,34 @@ protocol ReminderListRepository {
     ///
     /// - Returns: specific reminder list found by id.
     ///
-    func getReminderList(withId id: ReminderList.ID) -> ReminderList
+    func getReminderList(withId id: ReminderList.ID) async throws -> ReminderList
     
     /// Add new reminder list.
     ///
     /// - Parameters:
     ///     - reminderList: New reminder list to be added.
     ///
-    func addReminderList(_ reminderList: ReminderList)
+    /// - Returns: the added reminder list's id.
+    ///
+    func addReminderList(_ reminderList: ReminderList) async throws
     
     /// Update reminder list.
     ///
     ///  - Parameters:
     ///     - reminderList: New reminder list to be updated.
     ///
-    func updateReminderList(_ reminderList: ReminderList)
+    func updateReminderList(_ reminderList: ReminderList) async throws
     
     /// Delete reminder list.
     ///
     /// - Parameters:
     ///     - id: id of the reminder list.
     ///
-    func deleteReminderList(withId: ReminderList.ID)
+    func deleteReminderList(withId id: ReminderList.ID) async throws
     
     /// Retrieves the first user-created reminder list, creating a new one if none exists.
     ///
     /// - Returns: The first user-created reminder list.
     ///
-    func getUserCreatedReminderList() -> ReminderList
+    func getUserCreatedReminderList() async throws -> ReminderList
 }

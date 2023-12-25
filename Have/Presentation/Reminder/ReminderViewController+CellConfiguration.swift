@@ -99,19 +99,9 @@ extension ReminderViewController {
     -> UIListContentConfiguration {
         var contentConfiguration = UIListContentConfiguration.valueCell()
         contentConfiguration.text = NSLocalizedString("List", comment: "Reminder list row text")
-        if reminderList.type != .userCreated {
-            let firstUserCreatedReminderList = reminderListRepository.getUserCreatedReminderList()
-            contentConfiguration.secondaryText = firstUserCreatedReminderList.name
-            contentConfiguration.image = firstUserCreatedReminderList.image
-        } else {
-            contentConfiguration.secondaryText = reminderList.name
-            contentConfiguration.image = reminderList.image
-        }
-        
-        cell.accessories = [
-            .disclosureIndicator()
-        ]
-        
+        contentConfiguration.secondaryText = reminderList.name
+        contentConfiguration.image = reminderList.image
+        cell.accessories = [.disclosureIndicator()]
         return contentConfiguration
     }
     
@@ -128,6 +118,7 @@ extension ReminderViewController {
             toggleSwitch.isOn = workingReminder.dueTime != nil
             toggleSwitch.addTarget(self, action: #selector(didToggleTimeSwitch(_:)), for: .valueChanged)
         case .flag:
+            flagSwitch = toggleSwitch
             toggleSwitch.isOn = workingReminder.isFlagged
             toggleSwitch.addTarget(self, action: #selector(didToggleFlagSwitch(_:)), for: .valueChanged)
         default: break
