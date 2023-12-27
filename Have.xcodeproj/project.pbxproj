@@ -38,7 +38,6 @@
 		6781D2A92B304611003FAF1D /* NetworkReminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6781D2A82B304611003FAF1D /* NetworkReminder.swift */; };
 		6781D2AC2B30468C003FAF1D /* Reminder+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6781D2AB2B30468C003FAF1D /* Reminder+Mapping.swift */; };
 		6781D2AE2B304695003FAF1D /* ReminderList+Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6781D2AD2B304695003FAF1D /* ReminderList+Mapping.swift */; };
-		6781D2B02B3047F7003FAF1D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6781D2AF2B3047F7003FAF1D /* GoogleService-Info.plist */; };
 		6781D2B32B3048D2003FAF1D /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 6781D2B22B3048D2003FAF1D /* FirebaseAnalytics */; };
 		6781D2B52B3048D2003FAF1D /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 6781D2B42B3048D2003FAF1D /* FirebaseAnalyticsOnDeviceConversion */; };
 		6781D2B72B3048D2003FAF1D /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6781D2B62B3048D2003FAF1D /* FirebaseAnalyticsSwift */; };
@@ -87,6 +86,7 @@
 		67F13E992B1F2BDD00525CA6 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 67F13E982B1F2BDD00525CA6 /* .gitignore */; };
 		67F13E9C2B1F2FD100525CA6 /* Reminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F13E9B2B1F2FD100525CA6 /* Reminder.swift */; };
 		67F13E9E2B1F381100525CA6 /* Reminder+DateTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F13E9D2B1F381100525CA6 /* Reminder+DateTime.swift */; };
+		67F4EFBC2B3BC7B5004642D9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 67F4EFBB2B3BC7B5004642D9 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -121,7 +121,6 @@
 		6781D2A82B304611003FAF1D /* NetworkReminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkReminder.swift; sourceTree = "<group>"; };
 		6781D2AB2B30468C003FAF1D /* Reminder+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reminder+Mapping.swift"; sourceTree = "<group>"; };
 		6781D2AD2B304695003FAF1D /* ReminderList+Mapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReminderList+Mapping.swift"; sourceTree = "<group>"; };
-		6781D2AF2B3047F7003FAF1D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6781D2E82B30517C003FAF1D /* ReminderListType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderListType.swift; sourceTree = "<group>"; };
 		6781D2F02B307539003FAF1D /* DefaultReminderListRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultReminderListRepository.swift; sourceTree = "<group>"; };
 		6781D2F22B307553003FAF1D /* DefaultReminderRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultReminderRepository.swift; sourceTree = "<group>"; };
@@ -145,6 +144,7 @@
 		67F13E982B1F2BDD00525CA6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		67F13E9B2B1F2FD100525CA6 /* Reminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reminder.swift; sourceTree = "<group>"; };
 		67F13E9D2B1F381100525CA6 /* Reminder+DateTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reminder+DateTime.swift"; sourceTree = "<group>"; };
+		67F4EFBB2B3BC7B5004642D9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -352,7 +352,7 @@
 				67F13E8D2B1F2BC500525CA6 /* Assets.xcassets */,
 				67F13E8F2B1F2BC500525CA6 /* LaunchScreen.storyboard */,
 				67F13E922B1F2BC500525CA6 /* Info.plist */,
-				6781D2AF2B3047F7003FAF1D /* GoogleService-Info.plist */,
+				67F4EFBB2B3BC7B5004642D9 /* GoogleService-Info.plist */,
 				67F13E8A2B1F2BC300525CA6 /* Have.xcdatamodeld */,
 			);
 			path = Have;
@@ -506,7 +506,7 @@
 			files = (
 				67F13E992B1F2BDD00525CA6 /* .gitignore in Resources */,
 				67F13E912B1F2BC500525CA6 /* LaunchScreen.storyboard in Resources */,
-				6781D2B02B3047F7003FAF1D /* GoogleService-Info.plist in Resources */,
+				67F4EFBC2B3BC7B5004642D9 /* GoogleService-Info.plist in Resources */,
 				67F13E8E2B1F2BC500525CA6 /* Assets.xcassets in Resources */,
 				67F13E892B1F2BC300525CA6 /* Main.storyboard in Resources */,
 			);
