@@ -140,8 +140,9 @@ extension ReminderViewController {
     ///
     func updateSecondaryText(for row: Row, secondaryText: (Reminder) -> String?) {
         guard row == .date || row == .time else { return }
-        guard let indexPath = self.dataSource.indexPath(for: row) else { return }
-        guard let cell = self.collectionView.cellForItem(at: indexPath) as? UICollectionViewListCell else { return }
+        guard let indexPath = self.dataSource.indexPath(for: row),
+              let cell = self.collectionView.cellForItem(at: indexPath) as? UICollectionViewListCell
+        else { return }
         var contentConfiguration = cell.contentConfiguration as? UIListContentConfiguration
         contentConfiguration?.secondaryText = secondaryText(self.workingReminder)
         cell.contentConfiguration = contentConfiguration

@@ -49,6 +49,18 @@ extension Date {
         return self.formatted(date: .omitted, time: .shortened)
     }
     
+    func isDateBeforeTodayColor() -> UIColor {
+        let currentDate = Date.now
+        let startOfToday = Calendar.current.startOfDay(for: currentDate)
+        let selfDateOnly = Calendar.current.startOfDay(for: self)
+        
+        if selfDateOnly < startOfToday {
+            return UIColor.systemRed
+        } else {
+            return UIColor.secondaryLabel
+        }
+    }
+    
     ///
     /// The day text for the reminder only includes the date.
     ///

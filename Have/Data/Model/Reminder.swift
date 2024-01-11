@@ -16,7 +16,6 @@ import Foundation
 ///     - isCompleted: whether or not the reminder is completed
 ///     - isFlagged: whether or not the reminder is flagged.
 ///     - reminderListRefID: reference id of the ReminderList to which the reminder belongs
-///
 struct Reminder: Equatable, Identifiable, Hashable {
     var id: String = UUID().uuidString
     var title: String

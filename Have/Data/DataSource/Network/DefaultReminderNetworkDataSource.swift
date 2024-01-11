@@ -60,7 +60,7 @@ class DefaultReminderNetworkDataSource: ReminderNetworkDataSource {
     
     func updateCompleted(withId id: NetworkReminder.ID) async throws {
         do {
-            var reminder = try await collectionRef.document(id).getDocument(as: NetworkReminder.self)
+            let reminder = try await collectionRef.document(id).getDocument(as: NetworkReminder.self)
             try await collectionRef.document(id).updateData(
                 ["isCompleted": !reminder.isCompleted]
             )
@@ -71,7 +71,7 @@ class DefaultReminderNetworkDataSource: ReminderNetworkDataSource {
     
     func updateFlagged(withId id: NetworkReminder.ID) async throws {
         do {
-            var reminder = try await collectionRef.document(id).getDocument(as: NetworkReminder.self)
+            let reminder = try await collectionRef.document(id).getDocument(as: NetworkReminder.self)
             try await collectionRef.document(id).updateData(
                 ["isFlagged": !reminder.isFlagged]
             )

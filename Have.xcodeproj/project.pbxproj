@@ -27,6 +27,7 @@
 		676A5BA72B29B73F00BA1661 /* ReminderListsViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676A5BA62B29B73F00BA1661 /* ReminderListsViewController+DataSource.swift */; };
 		676A5BAA2B29B76900BA1661 /* ReminderListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676A5BA92B29B76900BA1661 /* ReminderListViewController.swift */; };
 		676A5BAC2B29D03600BA1661 /* ReminderListsViewController+CellConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676A5BAB2B29D03600BA1661 /* ReminderListsViewController+CellConfiguration.swift */; };
+		6776B5252B4F9410002376C6 /* ReminderContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6776B5242B4F9410002376C6 /* ReminderContentView.swift */; };
 		677B955C2B2AE3510002D4FE /* ReminderListNameContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677B955B2B2AE3510002D4FE /* ReminderListNameContentView.swift */; };
 		677B955E2B2AE5E00002D4FE /* ReminderListViewController+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677B955D2B2AE5E00002D4FE /* ReminderListViewController+Action.swift */; };
 		677B95622B2AE6510002D4FE /* ReminderListViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677B95612B2AE6510002D4FE /* ReminderListViewController+DataSource.swift */; };
@@ -110,6 +111,7 @@
 		676A5BA62B29B73F00BA1661 /* ReminderListsViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReminderListsViewController+DataSource.swift"; sourceTree = "<group>"; };
 		676A5BA92B29B76900BA1661 /* ReminderListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderListViewController.swift; sourceTree = "<group>"; };
 		676A5BAB2B29D03600BA1661 /* ReminderListsViewController+CellConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReminderListsViewController+CellConfiguration.swift"; sourceTree = "<group>"; };
+		6776B5242B4F9410002376C6 /* ReminderContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderContentView.swift; sourceTree = "<group>"; };
 		677B955B2B2AE3510002D4FE /* ReminderListNameContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderListNameContentView.swift; sourceTree = "<group>"; };
 		677B955D2B2AE5E00002D4FE /* ReminderListViewController+Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReminderListViewController+Action.swift"; sourceTree = "<group>"; };
 		677B95612B2AE6510002D4FE /* ReminderListViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReminderListViewController+DataSource.swift"; sourceTree = "<group>"; };
@@ -319,6 +321,7 @@
 				673965C52B20ADBE009220AD /* DatePickerContentView.swift */,
 				67E1050E2B22D50700151738 /* TimePickerContentView.swift */,
 				677B955B2B2AE3510002D4FE /* ReminderListNameContentView.swift */,
+				6776B5242B4F9410002376C6 /* ReminderContentView.swift */,
 			);
 			path = ContentView;
 			sourceTree = "<group>";
@@ -552,6 +555,7 @@
 				676A5BA52B29B73400BA1661 /* ReminderListsViewController+Action.swift in Sources */,
 				677B955C2B2AE3510002D4FE /* ReminderListNameContentView.swift in Sources */,
 				676A5BA12B299AFD00BA1661 /* ReminderListsViewController.swift in Sources */,
+				6776B5252B4F9410002376C6 /* ReminderContentView.swift in Sources */,
 				673965C42B20805A009220AD /* TextViewContentView.swift in Sources */,
 				673965C62B20ADBE009220AD /* DatePickerContentView.swift in Sources */,
 				671E801D2B3563FD009D1A4D /* ArrayExtensions.swift in Sources */,

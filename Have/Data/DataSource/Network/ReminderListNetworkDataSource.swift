@@ -1,6 +1,6 @@
 /**
  * Abstract:
- * 
+ * Protocol for Reminder List Network datasource.
  */
 
 import Foundation

@@ -16,7 +16,7 @@ class RemindersViewController: UIViewController {
     var filteredReminders = [Reminder]()
     
     var collectionView: UICollectionView! = nil
-    var dataSource: UICollectionViewDiffableDataSource<Int, Reminder>! = nil
+    var dataSource: UICollectionViewDiffableDataSource<Section, Reminder>! = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()

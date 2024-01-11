@@ -13,7 +13,7 @@ extension RemindersViewController {
         completedReminder(withId: id)
     }
     
-    /// Called when the user clicks the complete button.
+    /// Called when the user clicks the Add Reminder button.
     @objc func didPressAddReminderButton(_ sender: AddReminderButton) {
         Task {
             let userCreatedReminderListOrNew = reminderList.type == .userCreated ?
@@ -39,7 +39,6 @@ extension RemindersViewController {
     ///
     /// - Parameters:
     ///     - reminder: Reminder for navigate reminder detail view controller.
-    ///
     func navigateToReminderViewController(with reminder: Reminder) {
         Task {
             let viewController = ReminderViewController(
@@ -53,7 +52,7 @@ extension RemindersViewController {
                 if reminder.reminderListRefId != reminderResult.reminderListRefId {
                     // If the list changed, attempting to reload when the current reminder is no longer
                     // preset in Reminders will result in a snapshot error.
-                    self.changeReminderListSnapshot()
+                    self.updateSnapshot()
                 } else {
                     self.updateSnapshot(reloading: [reminder])
                 }
@@ -72,7 +71,6 @@ extension RemindersViewController {
     ///
     /// - Parameters:
     ///     - id: The identifier of the reminder
-    ///
     func configureDeleteAction(with reminder: Reminder) -> UIContextualAction {
         let deleteActionTitle = NSLocalizedString("Delete", comment: "Delete action button title")
         let deleteAction = UIContextualAction(style: .destructive, title: deleteActionTitle) {
@@ -88,10 +86,8 @@ extension RemindersViewController {
     ///
     /// - Parameters:
     ///     - id: The identifier of the reminder
-    ///
     func configurDetailAction(with reminder: Reminder) -> UIContextualAction {
         let detailActionTitle = NSLocalizedString("Detail", comment: "Detail action button title")
-        
         return UIContextualAction(style: .normal, title: detailActionTitle) {
             [weak self] _, _, completion in
             self?.navigateToReminderViewController(with: reminder)
@@ -103,10 +99,8 @@ extension RemindersViewController {
     ///
     /// - Parameters:
     ///     - id: The identifier of the reminder
-    ///
     func configureFlagAction(with reminder: Reminder) -> UIContextualAction {
         let flagActionTitle = NSLocalizedString("Flag", comment: "Flag action button title")
-        
         let flagAction = UIContextualAction(style: .normal, title: flagActionTitle) {
             [weak self] _, _, completion in
             self?.flagReminder(reminder)

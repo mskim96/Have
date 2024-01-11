@@ -152,7 +152,6 @@ extension ReminderViewController {
     ///     - expandRow: you want to expand row.
     ///     - collapseRow: you want to collapse row.
     ///     - afterRow: expand row insert after this row.
-    ///
     private func toggleExpandableSnapshotIfNeeded(
         _ snapshot: inout Snapshot,
         expandRow: Row,
@@ -180,7 +179,6 @@ extension ReminderViewController {
     ///     - expandRow: you want to expand row.
     ///     - collapseRow: you want to collapse row.
     ///     - afterRow: expand row insert after this row.
-    ///
     private func toggleExpandableSnapshot(
         _ snapshot: inout Snapshot,
         expand: Bool,
